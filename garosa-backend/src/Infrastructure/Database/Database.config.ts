@@ -4,7 +4,7 @@ import { appConfiguration } from '../../Application.config';
 
 dotenv.config();
 
-export const DatabaseConfiguration = () => {
+export const DatabaseConfiguration = (): Database => {
     switch (appConfiguration.app.environment) {
         case 'development':
             const databaseConfiguration: Database = new Database(
@@ -17,5 +17,12 @@ export const DatabaseConfiguration = () => {
             );
             return databaseConfiguration;
     }
-    return new Database('missingUsername', 'missingPassword', 'missingDatabase', 'missingHost', 'missingPort', 'missingDialect');
+    return new Database(
+        'missingUsername',
+        'missingPassword',
+        'missingDatabase',
+        'missingHost',
+        'missingPort',
+        'missingDialect'
+    );
 };
