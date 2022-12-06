@@ -1,18 +1,23 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../Infrastructure/Database/Database';
 
-export interface ILog {
+import { RoutePoint } from './RoutePoint';
+
+export interface IRoute {
     id?: number;
-    userId?: number;
-    logName?: string;
-    logDescription?: string;
-    logStatus?: number;
+    supervisorId?: number;
+    distributorId?: number;
+    routeTitle?: string;
+    routeDescription?: string;
+    startTime?: Date;
+    endTime?: Date;
     createdOn?: Date;
+    updatedOn?: Date;
     deleted?: boolean;
 }
 
-export const Log = sequelize.define(
-    'Log',
+export const Route = sequelize.define(
+    'Route',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -20,23 +25,27 @@ export const Log = sequelize.define(
             autoIncrement: true,
             allowNull: false,
         },
-        logName: {
+        routeName: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        logDescription: {
+        routeDescription: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        logSource: {
-            type: DataTypes.STRING,
+        startTime: {
+            type: DataTypes.DATE,
             allowNull: false,
         },
-        logStatus: {
-            type: DataTypes.INTEGER,
+        endTime: {
+            type: DataTypes.DATE,
             allowNull: false,
         },
         createdOn: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        updatedOn: {
             type: DataTypes.DATE,
             allowNull: false,
         },
@@ -47,7 +56,13 @@ export const Log = sequelize.define(
         },
     },
     {
-        tableName: 'log',
+        tableName: 'route',
         timestamps: false,
     }
 );
+
+Route.hasMany(RoutePoint, {
+    foreignKey: 'routeId',
+    sourceKey: 'id',
+});
+RoutePoint.belongsTo(Route, { foreignKey: 'routeId', targetKey: 'id' });

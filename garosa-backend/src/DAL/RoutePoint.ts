@@ -1,24 +1,25 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../Infrastructure/Database/Database';
 
-import { UserAccess } from './UserAccess';
-import { Log } from './Log';
-import { Route } from './Route';
-
-export interface IUser {
+export interface IRoutePoint {
     id?: number;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    password?: string;
-    hash?: string;
+    routeId?: number;
+    pointId?: number;
+    reportTitle?: string;
+    reportObservation?: string;
+    status?: number;
+    imageOne?: string;
+    imageTwo?: string;
+    imageThree?: string;
+    startTime?: Date;
+    endTime?: Date;
     createdOn?: Date;
     updatedOn?: Date;
     deleted?: boolean;
 }
 
-export const User = sequelize.define(
-    'User',
+export const RoutePoint = sequelize.define(
+    'RoutePoint',
     {
         id: {
             type: DataTypes.INTEGER,
@@ -26,26 +27,36 @@ export const User = sequelize.define(
             autoIncrement: true,
             allowNull: false,
         },
-        firstName: {
+        reportTitle: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        lastName: {
+        reportObservation: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        email: {
-            type: DataTypes.STRING,
-            unique: true,
+        status: {
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
-        password: {
+        imageOne: {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        hash: {
+        imageTwo: {
             type: DataTypes.STRING,
-            unique: true,
+            allowNull: false,
+        },
+        imageThree: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        startTime: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        endTime: {
+            type: DataTypes.DATE,
             allowNull: false,
         },
         createdOn: {
@@ -63,31 +74,7 @@ export const User = sequelize.define(
         },
     },
     {
-        tableName: 'user',
+        tableName: 'route_point',
         timestamps: false,
     }
 );
-
-User.hasMany(UserAccess, {
-    foreignKey: 'userId',
-    sourceKey: 'id',
-});
-UserAccess.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
-
-User.hasMany(Log, {
-    foreignKey: 'userId',
-    sourceKey: 'id',
-});
-Log.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
-
-User.hasMany(Route, {
-    foreignKey: 'supervisorId',
-    sourceKey: 'id',
-});
-Route.belongsTo(User, { foreignKey: 'supervisorId', targetKey: 'id' });
-
-User.hasMany(Route, {
-    foreignKey: 'distributorId',
-    sourceKey: 'id',
-});
-Route.belongsTo(User, { foreignKey: 'distributorId', targetKey: 'id' });
