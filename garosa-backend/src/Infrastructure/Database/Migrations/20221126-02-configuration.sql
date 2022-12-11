@@ -2,5 +2,5 @@
 -- Created by: Pablo Beltran
 -- Description: Insert default application configuration
 
-INSERT IGNORE INTO application_configuration (id, language, maxRadius, maxPointsPerRoute, updatedOn) 
-VALUES(1, 'en', 100.00, 20, NOW());
+INSERT IGNORE INTO application_configuration (id, language, maxRadius, maxPointsPerRoute, updatedOn, createdOn, deleted) 
+VALUES(1, 'en_US', 100.00, 20, NOW(), NOW(), 0);
