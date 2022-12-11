@@ -6,7 +6,9 @@ export interface IApplicationConfiguration {
     language?: string;
     maxRadius?: number;
     maxPointsPerRoute?: number;
+    createdOn?: Date;
     updatedOn?: Date;
+    deleted?: boolean;
 }
 
 export const ApplicationConfiguration = sequelize.define(
@@ -30,9 +32,18 @@ export const ApplicationConfiguration = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
         },
+        createdOn: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
         updatedOn: {
             type: DataTypes.DATE,
             allowNull: false,
+        },
+        deleted: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
         },
     },
     {

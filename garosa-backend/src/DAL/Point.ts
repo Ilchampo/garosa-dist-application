@@ -21,11 +21,6 @@ export const Point = sequelize.define(
             autoIncrement: true,
             allowNull: false,
         },
-        pointCode: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            unique: true,
-        },
         pointName: {
             type: DataTypes.STRING,
             allowNull: false,

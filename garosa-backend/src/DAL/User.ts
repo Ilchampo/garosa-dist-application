@@ -11,7 +11,6 @@ export interface IUser {
     lastName?: string;
     email?: string;
     password?: string;
-    hash?: string;
     createdOn?: Date;
     updatedOn?: Date;
     deleted?: boolean;
@@ -41,11 +40,6 @@ export const User = sequelize.define(
         },
         password: {
             type: DataTypes.STRING,
-            allowNull: false,
-        },
-        hash: {
-            type: DataTypes.STRING,
-            unique: true,
             allowNull: false,
         },
         createdOn: {

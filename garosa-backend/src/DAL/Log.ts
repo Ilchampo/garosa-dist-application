@@ -6,8 +6,10 @@ export interface ILog {
     userId?: number;
     logName?: string;
     logDescription?: string;
+    logSource?: string;
     logStatus?: number;
     createdOn?: Date;
+    updatedOn?: Date;
     deleted?: boolean;
 }
 
@@ -37,6 +39,10 @@ export const Log = sequelize.define(
             allowNull: false,
         },
         createdOn: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        updatedOn: {
             type: DataTypes.DATE,
             allowNull: false,
         },

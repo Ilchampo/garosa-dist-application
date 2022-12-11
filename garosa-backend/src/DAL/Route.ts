@@ -9,6 +9,7 @@ export interface IRoute {
     distributorId?: number;
     routeTitle?: string;
     routeDescription?: string;
+    routeStatus?: number;
     startTime?: Date;
     endTime?: Date;
     createdOn?: Date;
@@ -31,6 +32,10 @@ export const Route = sequelize.define(
         },
         routeDescription: {
             type: DataTypes.STRING,
+            allowNull: false,
+        },
+        routeStatus: {
+            type: DataTypes.INTEGER,
             allowNull: false,
         },
         startTime: {

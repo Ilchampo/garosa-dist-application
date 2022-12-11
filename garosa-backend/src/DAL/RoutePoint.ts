@@ -6,7 +6,7 @@ export interface IRoutePoint {
     routeId?: number;
     pointId?: number;
     reportTitle?: string;
-    reportObservation?: string;
+    reportDescription?: string;
     status?: number;
     imageOne?: string;
     imageTwo?: string;
@@ -31,7 +31,7 @@ export const RoutePoint = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        reportObservation: {
+        reportDescription: {
             type: DataTypes.STRING,
             allowNull: false,
         },

@@ -1,5 +1,7 @@
 import validator from 'validator';
 
+const PASSWORD_LENGTH = 8;
+
 export const IsAlpha = (value: any): boolean => {
     if (value) {
         const trimmed = value.trim();
@@ -28,6 +30,13 @@ export const IsAlphanumeric = (value: any): boolean => {
 
 export const IsNumeric = (value: any): boolean => {
     return value ? validator.isNumeric(value) : false;
+};
+
+export const IsPassword = (value: any): boolean => {
+    if (typeof(value) === 'string') {
+        return value.trim().length >= PASSWORD_LENGTH;
+    }
+    return false;
 };
 
 export const IsEmail = (value: any): boolean => {
