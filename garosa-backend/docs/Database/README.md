@@ -1,3 +1,3 @@
 # Database
 
-![Entity Relationship Diagram](/source/entity_relationship.svg)
+![Entity Relationship Diagram](garosa-dist-application/garosa-backend/docs/Database/source/entity_relationship.svg)

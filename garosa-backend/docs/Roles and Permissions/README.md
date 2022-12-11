@@ -2,7 +2,7 @@
 
 Roles and permissions are essential in every enterprise application. For Garosa Dist, we took the approach of Role-Based access. This means an user can have a single role and depending on what role the user is assigned, it can perform different actions on the application. The following Use Case Diagram can help the reader identificate the actos and cases of the system to understand better when each role and permission is applied to.
 
-![Use Cases](/source/use_case.svg)
+![Use Cases](/docs/Roles%20and%20Permissions/source/use_case.svg)
 
 ## Roles
 
