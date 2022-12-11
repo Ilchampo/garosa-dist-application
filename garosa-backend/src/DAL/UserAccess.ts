@@ -19,13 +19,31 @@ export const UserAccess = sequelize.define(
             autoIncrement: true,
             allowNull: false,
         },
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'User',
+                key: 'id',
+            },
+        },
+        roleId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Role',
+                key: 'id',
+            },
+        },
         createdOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         updatedOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         deleted: {
             type: DataTypes.BOOLEAN,

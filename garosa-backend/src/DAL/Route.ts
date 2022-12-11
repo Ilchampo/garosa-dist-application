@@ -26,6 +26,22 @@ export const Route = sequelize.define(
             autoIncrement: true,
             allowNull: false,
         },
+        supervisorId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'User',
+                key: 'id',
+            },
+        },
+        distributorId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'User',
+                key: 'id',
+            },
+        },
         routeName: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -40,19 +56,21 @@ export const Route = sequelize.define(
         },
         startTime: {
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: true,
         },
         endTime: {
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: true,
         },
         createdOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         updatedOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         deleted: {
             type: DataTypes.BOOLEAN,
@@ -66,8 +84,9 @@ export const Route = sequelize.define(
     }
 );
 
-Route.hasMany(RoutePoint, {
+Route.hasMany(RoutePoint);
+RoutePoint.belongsTo(Route, {
     foreignKey: 'routeId',
-    sourceKey: 'id',
+    targetKey: 'id',
+    as: 'route_point_route_FK',
 });
-RoutePoint.belongsTo(Route, { foreignKey: 'routeId', targetKey: 'id' });

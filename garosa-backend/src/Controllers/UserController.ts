@@ -4,7 +4,7 @@ import * as User from '../BAL/bUser';
 
 export async function GetAllUsers(req: Request, res: Response): Promise<Response> {
     const result = await User.GetAllUsers();
-    return res.status(result.status).json({msg: result.message, payload: result.payload});
+    return res.status(result.status).json({ msg: result.message, payload: result.payload });
 }
 
 // export async function GetAllUsersByRole(req: Request, res: Response): Promise<Response> {
@@ -16,7 +16,7 @@ export async function GetAllUsers(req: Request, res: Response): Promise<Response
 export async function GetUserById(req: Request, res: Response): Promise<Response> {
     const userId = req.query.id;
     const result = await User.GetUserById(userId);
-    return res.status(result.status).json({msg: result.message, payload: result.payload});
+    return res.status(result.status).json({ msg: result.message, payload: result.payload });
 }
 
 export async function CreateUser(req: Request, res: Response): Promise<Response> {
@@ -25,7 +25,7 @@ export async function CreateUser(req: Request, res: Response): Promise<Response>
         lastName: req.body.lastName,
         email: req.body.email,
     };
-    const roleId = req.body.roleId;
-    const result = await User.CreateUser(user);
-    return res.status(result.status).json({msg: result.message, payload: result.payload});
+    let role = typeof req.body.role === 'string' ? parseInt(req.body.role) : 0;
+    const result = await User.CreateUser({ user, role });
+    return res.status(result.status).json({ msg: result.message, payload: result.payload });
 }

@@ -29,7 +29,6 @@ export async function UpdateApplicationConfiguration(request: IApplicationConfig
                 language: request.language,
                 maxRadius: request.maxRadius,
                 maxPointsPerRoute: request.maxPointsPerRoute,
-                updatedOn: Date.now(),
             });
             await appConfig.save();
             return new Response(200, 'Application configuration saved successfully', appConfig);

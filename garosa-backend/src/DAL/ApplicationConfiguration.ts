@@ -35,10 +35,12 @@ export const ApplicationConfiguration = sequelize.define(
         createdOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         updatedOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         deleted: {
             type: DataTypes.BOOLEAN,

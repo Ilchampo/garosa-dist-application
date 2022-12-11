@@ -45,10 +45,12 @@ export const User = sequelize.define(
         createdOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         updatedOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         deleted: {
             type: DataTypes.BOOLEAN,
@@ -62,26 +64,30 @@ export const User = sequelize.define(
     }
 );
 
-User.hasMany(UserAccess, {
+User.hasMany(UserAccess);
+UserAccess.belongsTo(User, {
     foreignKey: 'userId',
-    sourceKey: 'id',
+    targetKey: 'id',
+    as: 'user_access_role_FK',
 });
-UserAccess.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
 
-User.hasMany(Log, {
-    foreignKey: 'userId',
-    sourceKey: 'id',
-});
-Log.belongsTo(User, { foreignKey: 'userId', targetKey: 'id' });
-
-User.hasMany(Route, {
+User.hasMany(Route);
+Route.belongsTo(User, {
     foreignKey: 'supervisorId',
-    sourceKey: 'id',
+    targetKey: 'id',
+    as: 'route_supervisor_FK',
 });
-Route.belongsTo(User, { foreignKey: 'supervisorId', targetKey: 'id' });
 
-User.hasMany(Route, {
+User.hasMany(Route);
+Route.belongsTo(User, {
     foreignKey: 'distributorId',
-    sourceKey: 'id',
+    targetKey: 'id',
+    as: 'route_distributor_FK',
 });
-Route.belongsTo(User, { foreignKey: 'distributorId', targetKey: 'id' });
+
+User.hasMany(Log);
+Log.belongsTo(User, {
+    foreignKey: 'userId',
+    targetKey: 'id',
+    as: 'log_user_FK',
+});

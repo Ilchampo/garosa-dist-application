@@ -20,6 +20,14 @@ export const RolePermission = sequelize.define(
             autoIncrement: true,
             allowNull: false,
         },
+        roleId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Role',
+                key: 'id'
+            }
+        },
         permissionName: {
             type: DataTypes.STRING,
             unique: true,
@@ -33,10 +41,12 @@ export const RolePermission = sequelize.define(
         createdOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         updatedOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         deleted: {
             type: DataTypes.BOOLEAN,

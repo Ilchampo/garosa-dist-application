@@ -34,10 +34,12 @@ export const Role = sequelize.define(
         createdOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         updatedOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         deleted: {
             type: DataTypes.BOOLEAN,
@@ -51,14 +53,16 @@ export const Role = sequelize.define(
     }
 );
 
-Role.hasMany(RolePermission, {
+Role.hasMany(UserAccess);
+UserAccess.belongsTo(Role, {
     foreignKey: 'roleId',
-    sourceKey: 'id',
+    targetKey: 'id',
+    as: 'user_access_role_FK',
 });
-RolePermission.belongsTo(Role, { foreignKey: 'roleId', targetKey: 'id' });
 
-Role.hasMany(UserAccess, {
+Role.hasMany(RolePermission);
+RolePermission.belongsTo(Role, {
     foreignKey: 'roleId',
-    sourceKey: 'id',
+    targetKey: 'id',
+    as: 'role_permission_role_FK',
 });
-UserAccess.belongsTo(Role, { foreignKey: 'roleId', targetKey: 'id' });

@@ -22,6 +22,14 @@ export const Log = sequelize.define(
             autoIncrement: true,
             allowNull: false,
         },
+        userId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'User',
+                key: 'id'
+            }
+        },
         logName: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -41,10 +49,12 @@ export const Log = sequelize.define(
         createdOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         updatedOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         deleted: {
             type: DataTypes.BOOLEAN,

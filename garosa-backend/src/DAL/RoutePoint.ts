@@ -27,6 +27,22 @@ export const RoutePoint = sequelize.define(
             autoIncrement: true,
             allowNull: false,
         },
+        routeId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Route',
+                key: 'id',
+            },
+        },
+        pointId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: 'Point',
+                key: 'id',
+            },
+        },
         reportTitle: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -35,37 +51,39 @@ export const RoutePoint = sequelize.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        status: {
+        routePointStatus: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        imageOne: {
+        reportImageOne: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
-        imageTwo: {
+        reportImageTwo: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
-        imageThree: {
+        reportImageThree: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         startTime: {
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: true,
         },
         endTime: {
             type: DataTypes.DATE,
-            allowNull: false,
+            allowNull: true,
         },
         createdOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         updatedOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         deleted: {
             type: DataTypes.BOOLEAN,

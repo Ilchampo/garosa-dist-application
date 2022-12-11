@@ -31,7 +31,7 @@ export const Point = sequelize.define(
         },
         pointImage: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         longitude: {
             type: DataTypes.DECIMAL,
@@ -44,10 +44,12 @@ export const Point = sequelize.define(
         createdOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         updatedOn: {
             type: DataTypes.DATE,
             allowNull: false,
+            defaultValue: Date.now(),
         },
         deleted: {
             type: DataTypes.BOOLEAN,
@@ -61,8 +63,9 @@ export const Point = sequelize.define(
     }
 );
 
-Point.hasMany(RoutePoint, {
+Point.hasMany(RoutePoint);
+RoutePoint.belongsTo(Point, {
     foreignKey: 'pointId',
-    sourceKey: 'id'
+    targetKey: 'id',
+    as: 'route_point_point_FK',
 });
-RoutePoint.belongsTo(Point, { foreignKey: 'pointId', targetKey: 'id' });
