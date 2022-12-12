@@ -8,3 +8,10 @@ export enum RoutePointStatus {
     IN_PROGRESS = 1,
     FINISHED = 2,
 }
+
+export enum Roles {
+    INVALID = 0,
+    ADMINISTRATOR = 1,
+    SUPERVISOR = 2,
+    DISTRIBUTOR = 3,
+}

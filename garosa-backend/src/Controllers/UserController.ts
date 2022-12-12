@@ -25,7 +25,6 @@ export async function CreateUser(req: Request, res: Response): Promise<Response>
         lastName: req.body.lastName,
         email: req.body.email,
     };
-    let role = typeof req.body.role === 'string' ? parseInt(req.body.role) : 0;
-    const result = await User.CreateUser({ user, role });
+    const result = await User.CreateUser({ user, role: req.body.role });
     return res.status(result.status).json({ msg: result.message, payload: result.payload });
 }

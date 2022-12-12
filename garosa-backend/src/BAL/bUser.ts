@@ -1,12 +1,13 @@
-import * as vf from '../Helpers/ValidateFields';
-import * as gen from '../Helpers/Generators';
 import bcrypt from 'bcrypt';
 
 import { Response } from '../DAL/Response';
 import { User, IUser } from '../DAL/User';
-import * as UserAccess from './bUserAccess';
 import { IUserAccess } from '../DAL/UserAccess';
 
+import * as vf from '../Helpers/ValidateFields';
+import * as gen from '../Helpers/Generators';
+import * as enums from '../Helpers/StaticEnums';
+import * as UserAccess from './bUserAccess';
 
 export async function GetAllUsers(): Promise<Response> {
     try {
@@ -61,47 +62,50 @@ export async function GetUserById(request: any): Promise<Response> {
     return new Response(400, 'Failed to retrieved user by id due invalid field', null);
 }
 
-export async function CreateUser(request: { user: IUser; role: number }): Promise<Response> {
-    if (vf.IsAlpha(request.user.firstName) && vf.IsAlpha(request.user.lastName)) {
-        if (vf.IsEmail(request.user.email)) {
-            try {
-                const user = await User.findOne({
-                    attributes: { exclude: ['password', 'hash'] },
-                    where: { email: request.user.email, deleted: false },
-                });
-                if (user) {
-                    return new Response(400, 'User already exists!', user);
+export async function CreateUser(request: { user: IUser; role: any }): Promise<Response> {
+    const sendRole = typeof request.role === 'string' ? parseInt(request.role) : enums.Roles.INVALID;
+    if (sendRole === enums.Roles.SUPERVISOR || sendRole === enums.Roles.DISTRIBUTOR) {
+        if (vf.IsAlpha(request.user.firstName) && vf.IsAlpha(request.user.lastName)) {
+            if (vf.IsEmail(request.user.email)) {
+                try {
+                    const user = await User.findOne({
+                        attributes: { exclude: ['password', 'hash'] },
+                        where: { email: request.user.email, deleted: false },
+                    });
+                    if (user) {
+                        return new Response(400, 'User already exists!', user);
+                    }
+
+                    const password = gen.GeneratePassword();
+                    const hash = await bcrypt.genSalt(10);
+                    const encryptedPassword = await bcrypt.hash(password, hash);
+
+                    const newUser = await User.create({
+                        firstName: request.user.firstName,
+                        lastName: request.user.lastName,
+                        email: request.user.email,
+                        password: encryptedPassword,
+                        deleted: false,
+                    });
+
+                    const userAccess: IUserAccess = {
+                        userId: newUser.dataValues.id,
+                        roleId: sendRole,
+                    };
+
+                    const newUserAccess = await UserAccess.CreateUserAccess(userAccess);
+                    if (newUserAccess.status !== 200) {
+                        return new Response(newUserAccess.status, newUserAccess.message, newUserAccess.payload);
+                    }
+
+                    return new Response(200, 'User created successfully', {
+                        email: request.user.email,
+                        password: password,
+                    });
+                } catch (error) {
+                    console.log(error);
+                    return new Response(500, 'Error while creating an user', error);
                 }
-
-                const password = gen.GeneratePassword();
-                const hash = await bcrypt.genSalt(10);
-                const encryptedPassword = await bcrypt.hash(password, hash);
-
-                const newUser = await User.create({
-                    firstName: request.user.firstName,
-                    lastName: request.user.lastName,
-                    email: request.user.email,
-                    password: encryptedPassword,
-                    deleted: false,
-                });
-
-                const userAccess: IUserAccess = {
-                    userId: newUser.dataValues.id,
-                    roleId: request.role,
-                };
-
-                const newUserAccess = await UserAccess.CreateUserAccess(userAccess);
-                if (newUserAccess.status !== 200) {
-                    return new Response(newUserAccess.status, newUserAccess.message, newUserAccess.payload);
-                }
-
-                return new Response(200, 'User created successfully', {
-                    email: request.user.email,
-                    password: password,
-                });
-            } catch (error) {
-                console.log(error);
-                return new Response(500, 'Error while creating an user', error);
             }
         }
     }
