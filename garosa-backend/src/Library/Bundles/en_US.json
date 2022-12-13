@@ -7,7 +7,9 @@
                     "multiple": "Created users successfully"
                 },
                 "read": {
+                    "singe_none": "User not found",
                     "single": "Retrieved user successfully",
+                    "multiple_none": "Users not found",
                     "multiple": "Retrieved users successfully"
                 },
                 "update": {
@@ -45,7 +47,9 @@
                     "multiple": "Created user accesses successfully"
                 },
                 "read": {
+                    "singe_none": "User access not found",
                     "single": "Retrieved user access successfully",
+                    "multiple_none": "User accesses not found",
                     "multiple": "Retrieved user accesses successfully"
                 },
                 "update": {
@@ -83,7 +87,9 @@
                     "multiple": "Created distribution points successfully"
                 },
                 "read": {
+                    "singe_none": "Distribution point not found",
                     "single": "Retrieved distribution point successfully",
+                    "multiple_none": "Distribution points not found",
                     "multiple": "Retrieved distribution points successfully"
                 },
                 "update": {
@@ -121,7 +127,9 @@
                     "multiple": "Created distribution routes successfully"
                 },
                 "read": {
+                    "singe_none": "Distribution route not found",
                     "single": "Retrieved distribution route successfully",
+                    "multiple_none": "Distribution routes not found",
                     "multiple": "Retrieved distribution routes successfully"
                 },
                 "update": {
