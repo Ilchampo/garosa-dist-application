@@ -27,28 +27,28 @@ userRouter.get('/get/user', UserController.GetUserById);
 // @access  Administrator
 userRouter.post('/create', UserController.CreateUser);
 
-// @routes  POST /users/edit/user?id
+// @routes  PUT /users/edit/user?id
 // @descri  Edit a user
 // @params  {id}: User Id
 // @access  Administrator
-userRouter.post('/edit/user', UserController.EditUser);
+userRouter.put('/edit/user', UserController.EditUser);
 
-// @routes  POST /users/edit/password?id
+// @routes  PUT /users/edit/password?id
 // @descri  Update user password
 // @params  {id}: User Id
 // @access  Administrator, Supervisor, Distributor
-userRouter.post('/edit/password', UserController.ChangePassword);
+userRouter.put('/edit/password', UserController.ChangePassword);
 
-// @routes  POST /users/edit/recover?id
+// @routes  PUT /users/edit/recover?id
 // @descri  Create new user password and update user
 // @params  {id}: User Id
 // @access  Administrator
-userRouter.post('/edit/recover', UserController.RecoverPassword);
+userRouter.put('/edit/recover', UserController.RecoverPassword);
 
-// @routes  POST /users/delete/user?id
+// @routes  DELETE /users/delete/user?id
 // @descri  Delete a user
 // @params  {id}: User Id
 // @access  Administrator
-userRouter.post('/delete/user', UserController.DeleteUser);
+userRouter.delete('/delete/user', UserController.DeleteUser);
 
 export default userRouter;

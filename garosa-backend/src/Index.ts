@@ -3,7 +3,7 @@ import { sequelize } from './Infrastructure/Database/Database';
 
 const initDatabase = async () => {
     await sequelize.sync({ force: false });
-    console.log('Connected to Database...');
+    console.log('Connecting to Database...');
     console.log('Database synchronized');
 };
 

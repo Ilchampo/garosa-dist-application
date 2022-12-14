@@ -9,11 +9,53 @@ import * as gen from '../Helpers/Generators';
 import * as enums from '../Helpers/StaticEnums';
 import * as UserAccess from './bUserAccess';
 
+export async function LogInWeb(request: IUser): Promise<Response> {
+    if (request.email && request.password) {
+        if (vf.IsEmail(request.email) && vf.IsPassword(request.password)) {
+            try {
+                // TODO - Query only users with role Administrator and Supervisor
+                const user = await User.findOne({ where: { email: request.email, deleted: false } });
+                if (user) {
+                    const isMatch = await bcrypt.compare(request.password, user.dataValues.password);
+                    if (isMatch) {
+                        // TODO - Generate Token
+                        return new Response(200, 'Successfully logged in', null);
+                    }
+                }
+            } catch (error) {
+                return new Response(500, 'Failed to log in', error);
+            }
+        }
+    }
+    return new Response(401, 'Invalid credentials', null);
+}
+
+export async function LogInMobile(request: IUser): Promise<Response> {
+    if (request.email && request.password) {
+        if (vf.IsEmail(request.email) && vf.IsPassword(request.password)) {
+            try {
+                // TODO - Query only users with role Distributor
+                const user = await User.findOne({ where: { email: request.email, deleted: false } });
+                if (user) {
+                    const isMatch = await bcrypt.compare(request.password, user.dataValues.password);
+                    if (isMatch) {
+                        // TODO - Generate Token
+                        return new Response(200, 'Successfully logged in', null);
+                    }
+                }
+            } catch (error) {
+                return new Response(500, 'Failed to log in', error);
+            }
+        }
+    }
+    return new Response(401, 'Invalid credentials', null);
+}
+
 export async function GetAllUsers(): Promise<Response> {
     try {
         const users = await User.findAll({ where: { deleted: false }, attributes: { exclude: ['password'] } });
         if (!users) {
-            return new Response(204, 'Users not found', null);
+            return new Response(404, 'Users not found', null);
         }
         return new Response(200, 'Retrieved user successfully', users);
     } catch (error) {
@@ -33,7 +75,7 @@ export async function GetAllUsersByRole(request: any): Promise<Response> {
                 // TODO - Query User Access to then get user data
                 const users = await User.findAll({ where: { deleted: false }, attributes: { exclude: ['password'] } });
                 if (!users) {
-                    return new Response(204, 'Users not found', null);
+                    return new Response(404, 'Users not found', null);
                 }
                 return new Response(200, 'Retrieved user successfully', users);
             } catch (error) {
@@ -53,7 +95,7 @@ export async function GetUserById(request: any): Promise<Response> {
                 attributes: { exclude: ['password'] },
             });
             if (!user) {
-                return new Response(204, 'User not found', null);
+                return new Response(404, 'User not found', null);
             }
             return new Response(200, 'Retrieved user successfully', user);
         } catch (error) {
@@ -86,13 +128,13 @@ export async function CreateUser(request: { role: any; data: IUser }): Promise<R
                             firstName: request.data.firstName,
                             lastName: request.data.lastName,
                             email: request.data.email,
-                            password: request.data.password,
+                            password: encrypted,
                             updatedOn: Date.now(),
                             createdOn: Date.now(),
                             deleted: false,
                         });
 
-                        const userAccess: IUserAccess = {
+                        const userAccess: any = {
                             userId: newUser.dataValues.id,
                             roleId: roleId,
                         };
@@ -213,10 +255,11 @@ export async function DeleteUser(request: any): Promise<Response> {
                 attributes: { exclude: ['password'] },
             });
             if (user) {
-                // TODO - Delete Log, User Access and Route where FK is user id
+                // TODO - Delete Log and Route where FK is user id
+                await UserAccess.DeleteAllUserAccess(userId);
                 user.set({
                     updatedOn: Date.now(),
-                    deleted: false,
+                    deleted: true,
                 });
                 await user.save();
                 return new Response(200, 'Deleted user successfully', user);

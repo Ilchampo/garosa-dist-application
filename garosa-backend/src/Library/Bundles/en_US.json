@@ -1,4 +1,11 @@
 {
+    "authentication": {
+        "log_in": {
+            "success": "Successfully logged in",
+            "invalid": "Invalid credentials",
+            "failed": "Failed to log in"
+        }
+    },
     "crud": {
         "user": {
             "success": {
