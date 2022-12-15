@@ -2,12 +2,13 @@ import bcrypt from 'bcrypt';
 
 import { Response } from '../DAL/Response';
 import { User, IUser } from '../DAL/User';
-import { IUserAccess } from '../DAL/UserAccess';
+import { UserAccess } from '../DAL/UserAccess';
 
 import * as vf from '../Helpers/ValidateFields';
 import * as gen from '../Helpers/Generators';
 import * as enums from '../Helpers/StaticEnums';
-import * as UserAccess from './bUserAccess';
+import * as bUserAccess from './bUserAccess';
+import { QueryTypes } from 'sequelize';
 
 export async function LogInWeb(request: IUser): Promise<Response> {
     if (request.email && request.password) {
@@ -30,26 +31,31 @@ export async function LogInWeb(request: IUser): Promise<Response> {
     return new Response(401, 'Invalid credentials', null);
 }
 
-export async function LogInMobile(request: IUser): Promise<Response> {
-    if (request.email && request.password) {
-        if (vf.IsEmail(request.email) && vf.IsPassword(request.password)) {
-            try {
-                // TODO - Query only users with role Distributor
-                const user = await User.findOne({ where: { email: request.email, deleted: false } });
-                if (user) {
-                    const isMatch = await bcrypt.compare(request.password, user.dataValues.password);
-                    if (isMatch) {
-                        // TODO - Generate Token
-                        return new Response(200, 'Successfully logged in', null);
-                    }
-                }
-            } catch (error) {
-                return new Response(500, 'Failed to log in', error);
-            }
-        }
-    }
-    return new Response(401, 'Invalid credentials', null);
-}
+// export async function LogInMobile(request: IUser): Promise<Response> {
+//     if (request.email && request.password) {
+//         if (vf.IsEmail(request.email) && vf.IsPassword(request.password)) {
+//             try {
+//                 const selectQuery = 
+//                     `
+//                         SELECT u.* FROM user u JOIN user_access ac ON u.id = ac.userId 
+//                         WHERE ac.roleId IN (${enums.Roles.ADMINISTRATOR}, ${enums.Roles.SUPERVISOR}) 
+//                         AND u.deleted = 0 AND u.email = ${request.email}
+//                     `;
+//                     const user = await User.sequelize?.query(selectQuery, { type: QueryTypes.SELECT });
+//                 if (user) {
+//                     const isMatch = await bcrypt.compare(request.password, user[0].password);
+//                     if (isMatch) {
+//                         // TODO - Generate Token
+//                         return new Response(200, 'Successfully logged in', null);
+//                     }
+//                 }
+//             } catch (error) {
+//                 return new Response(500, 'Failed to log in', error);
+//             }
+//         }
+//     }
+//     return new Response(401, 'Invalid credentials', null);
+// }
 
 export async function GetAllUsers(): Promise<Response> {
     try {
@@ -64,7 +70,7 @@ export async function GetAllUsers(): Promise<Response> {
 }
 
 export async function GetAllUsersByRole(request: any): Promise<Response> {
-    const roleId = vf.IsNumeric(request.role) ? parseInt(request.role) : null;
+    const roleId = vf.IsNumeric(request) ? parseInt(request) : null;
     if (roleId) {
         if (
             roleId === enums.Roles.ADMINISTRATOR ||
@@ -72,11 +78,15 @@ export async function GetAllUsersByRole(request: any): Promise<Response> {
             roleId === enums.Roles.DISTRIBUTOR
         ) {
             try {
-                // TODO - Query User Access to then get user data
-                const users = await User.findAll({ where: { deleted: false }, attributes: { exclude: ['password'] } });
-                if (!users) {
+                const selectQuery = 
+                    `
+                    SELECT u.* FROM user u JOIN user_access ac ON u.id = ac.userId WHERE ac.roleId IN (1, 2) AND u.deleted = 0 AND u.email = 'admain@garosa.com'
+                    `;
+                const users = await User.sequelize?.query(selectQuery, { type: QueryTypes.SELECT });
+                if (users?.length === 0) {
                     return new Response(404, 'Users not found', null);
                 }
+                console.log(users?.at(0));
                 return new Response(200, 'Retrieved user successfully', users);
             } catch (error) {
                 return new Response(500, 'Failed to retrieve users', error);
@@ -139,7 +149,7 @@ export async function CreateUser(request: { role: any; data: IUser }): Promise<R
                             roleId: roleId,
                         };
 
-                        const linkedUserAccess = await UserAccess.CreateUserAccess(userAccess);
+                        const linkedUserAccess = await bUserAccess.CreateUserAccess(userAccess);
                         if (linkedUserAccess.status !== 200) {
                             return new Response(
                                 linkedUserAccess.status,
@@ -256,7 +266,7 @@ export async function DeleteUser(request: any): Promise<Response> {
             });
             if (user) {
                 // TODO - Delete Log and Route where FK is user id
-                await UserAccess.DeleteAllUserAccess(userId);
+                await bUserAccess.DeleteAllUserAccess(userId);
                 user.set({
                     updatedOn: Date.now(),
                     deleted: true,
